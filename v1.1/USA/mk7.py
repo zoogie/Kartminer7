@@ -54,6 +54,16 @@ rop(ROP_POPPC)
 rop(pivot)
 
 
+with open("3ds_ropkit/otherapp.bin","rb") as f:  
+	oapp=f.read()
+	
+with open("3ds_ropkit/ropkit.bin","rb") as f:
+	ropkit=f.read()
+	ropkit+=(b"\x00"*(0x400-len(ropkit)))
 
-with open("data.dat","wb") as f:
+with open("308/boss/wTRu2!!!(`!!+s(@","rb+") as f: #i can't pronounce that spotpass file's name, any ideas?
+	f.seek(0x1000-0xc)
+	f.write(ropkit+oapp)
+
+with open("308/user/data.dat","wb") as f:
 	f.write(out)

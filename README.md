@@ -27,24 +27,22 @@ d. Turn off Wifi on your 3DS. The reason is spotpass could download and erase th
 
 -- Optional (but highly recommended)
 Backing up your extdata save<br>
-a. Place your 3DS sd card into your PC and make note of the Drive Letter. (Usually E-I, but could be higher letter)<br>
+a. Place your 3DS sd card into your PC.<br>
 b. Go inside the "backup" folder and double click the backup_???.bat script where ??? is your 3DS's region.<br>
-If it errors, open up the .bat script you clicked with notepad and check that the drive letter  ' --sd "F:"  ' matches yours. Change it and save if it's different.<br>
 c. A folder like 306, 307, or 308 should appear in the backup folder if the backup worked. <br>
 After the exploit is finished and you've installed cfw, you may run the restore_???.bat to restore your old unhacked save.<br>
 
 Instructions:
 
-1. Place your 3DS sd card into your PC and make note of the Drive Letter. (Usually E-I, but could be higher letter)
+1. Place your 3DS sd card into your PC.
 
 2. In the Release folder, double click on the .bat that matches your 3DS's model type and region. 
-If it errors, open up the .bat script you clicked with notepad and check that the drive letter  ' --sd "F:"  ' matches yours. Change it and save if it's different.
 
 3. Your hax upload worked if there is no red text and it says "finished" at the end.
 
 4. Turn your 3ds on, boot mk7, and go to Mario Kart Channel -> Streetpass List -> Press A repeatedly (but slowly) to get past all the menu screens until the hax launches.
 
-5. If successful, you should arrive at a black and white screen titled "3DS ROP xPloit Injector". You now have a choice of further exploits to install, unsafe_mode or menuhax67, but that's the subject of another tutorial!
+5. If successful, you should arrive at a black and white screen titled "3DS ROP xPloit Injector". You now have a choice of further exploits to install: unsafe_mode or menuhax67, but that's the subject of another tutorial!
 Enjoy!
 
 ## Q&A

