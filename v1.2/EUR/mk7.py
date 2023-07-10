@@ -73,7 +73,7 @@ with open("3ds_ropkit/otherappn.bin","rb") as f:
 	oappn=oappn[:0x2000]
 print("ropkit:%x  +otherapp_old:%x" % (len(ropkit), len(ropkit+oapp)))
 
-with open("loader/ropkit.bin","rb") as f:
+with open("loader/loader.bin","rb") as f:
 	loader=f.read()
 
 with open("307/boss/wTRu2!!!(`!!+s(@","rb+") as f:
