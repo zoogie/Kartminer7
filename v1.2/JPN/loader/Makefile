@@ -9,5 +9,5 @@ ropkit.bin: $(HAXNAME).elf
 	arm-none-eabi-objcopy -O binary $(HAXNAME).elf ropkit.bin
 
 $(HAXNAME).elf:	$(HAXNAME).s
-	arm-none-eabi-gcc -x assembler-with-cpp -nostartfiles -nostdlib -Ttext=0x14220000 $< -o $(HAXNAME).elf
+	arm-none-eabi-gcc -x assembler-with-cpp -nostartfiles -nostdlib -Ttext=0x1579e600 $< -o $(HAXNAME).elf
 
