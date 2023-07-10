@@ -43,6 +43,6 @@
 #define GSP_SHAREDMEM_SETUPFRAMEBUF 0x00230a94
 #define GSPTHREAD_OBJECTADDR 0x0065ac40
 //WARNING: FS_MountSdmc not found.
-#define IFile_Open 0x00102d7c
+#define  IFile_Open 0x00102d7c
 #define IFile_Close 0x102ea0
 #define IFile_Seek 0x001891a4
