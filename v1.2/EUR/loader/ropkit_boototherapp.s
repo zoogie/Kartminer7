@@ -33,6 +33,14 @@
 #endif
 
 #define ROPKIT_TRANSFER_CHUNKSIZE 0x100000
+ROP_SETR0 0x010000ff
+ROP_SETR1 ROPKIT_TMPDATA+0x80
+.word STR_R0R1_POPR4PC
+.word GARBAGE
+
+@ Copy red to address and then gpu_writehwregs. we need to stay position independant
+CALLFUNC_NOSP GSP_WRITEHWREGS, GSPGPU_SERVHANDLEADR, HWREGS_ADDR, ROPKIT_TMPDATA+0x80, 4
+CALLFUNC_R0R1 svcSleepThread, 1000*1000000, 0
 
 @ Set the flag for terminating the GSP thread.
 @CALLFUNC_R0R1 svcSleepThread, 0x80000000,0

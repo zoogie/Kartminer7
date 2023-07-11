@@ -25,7 +25,10 @@
 #define ROPKIT_BEFOREJUMP_CACHEBUFSIZE 0x800000  	//large gsgpu flush fixes our new3ds L2 cache issues - and increases stability for old3ds
 #define UBL_ 0x64f66b+1             //skip the first letter since its mounted already by app (sd:/)
 #define UBL_UBLL_LST 0x652Bca+2    //reload unabridged sd:/data.dat with remaining payload files embedded. no more heap guesswork.
-#define  FS_MountExtSavedata 0x186EBC
+#define FS_MountExtSavedata 0x186EBC
+#define GSP_WRITEHWREGS 0x111fc0
+#define HWREGS_ADDR 0x0202A04
+#define STR_R0R1_POPR4PC 0x106010
 
 
 #include "ropkit_ropinclude.s"

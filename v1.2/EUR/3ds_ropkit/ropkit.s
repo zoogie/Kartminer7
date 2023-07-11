@@ -22,6 +22,8 @@
 #define ROPKIT_ENABLETERMINATE_GSPTHREAD
 #define ROPKIT_BEFOREJUMP_CACHEBUFADDR (ROPKIT_LINEARMEM_REGIONBASE+0x380000)
 #define ROPKIT_BEFOREJUMP_CACHEBUFSIZE 0x2000  	//large gsgpu flush fixes our new3ds L2 cache issues - and increases stability for old3ds
+#define GSP_WRITEHWREGS 0x111fc0
+#define HWREGS_ADDR 0x0202A04
 
 
 #include "ropkit_ropinclude.s"

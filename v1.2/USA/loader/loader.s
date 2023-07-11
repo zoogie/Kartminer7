@@ -26,6 +26,9 @@
 #define UBL_ 0x64f665+1             //skip the first letter since its mounted already by app (sd:/)
 #define UBL_UBLL_LST 0x652bc4+2    //reload unabridged sd:/data.dat with remaining payload files embedded. no more heap guesswork.
 #define FS_MountExtSavedata 0x186EBC
+#define GSP_WRITEHWREGS 0x111fc0
+#define HWREGS_ADDR 0x0202A04
+#define STR_R0R1_POPR4PC 0x106010
 
 
 #include "ropkit_ropinclude.s"
