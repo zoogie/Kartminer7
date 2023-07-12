@@ -42,7 +42,8 @@ Instructions:
 3. Your hax upload worked if there is no red text and it says "finished" at the end.
 
 4. Turn your 3ds on, boot mk7, and go to Mario Kart Channel -> Streetpass List -> Press A repeatedly (but slowly) to get past all the menu screens until the hax launches. You should see colors change on the bottom
-screen: Red -> Blue -> White. If you don't see those colors, and it just crashes (2-3 tries), then go to System Settings and change your language. Repeat language changes if you still can't get colored bottom screens after running exploit. If you do get those colors but it still crashes, just keep trying on that same language - you're almost there.
+screen: Red -> Blue -> White. If you don't see those colors, and it just crashes (2-3 tries), then go to System Settings and change your language. Repeat language changes if you still can't get colored bottom screens after running exploit. If you do get those colors but it still crashes, just keep trying on that same language - you're almost there.<br>
+Note: JPN only has 1 language so language switching doesn't apply. 
 
 5. If successful, you should arrive at a black and white screen titled "3DS ROP xPloit Injector". You now have a choice of further exploits to install: unsafe_mode or menuhax67, but that's the subject of another tutorial!
 Enjoy!
