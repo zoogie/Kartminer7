@@ -4,6 +4,7 @@
 - wwylele for [save3ds](https://github.com/wwylele/save3ds) Installing the exploit to extdata from just seedminer and a PC would be impossible without this tool.
 - PabloMK7 for [3dsropxploitinjector](https://github.com/PabloMK7/3dsropxploitinjector) which makes tricky exploits like this much less of a hassle. Do you know he is also the author of a different mk7 exploit [kartdlphax](https://github.com/PabloMK7/kartdlphax), and ALSO the famous mk7 plugin [CTGP-7](https://ctgp-7.github.io/)?
 - Yellows8 for this enduringly useful tool: [3ds_ropkit](https://github.com/yellows8/3ds_ropkit)
+- All my testers in the issue threads!
 
 ## What is this?
 This is a BETA stage exploit for Mario Kart 7. This is the 3rd public exploit of this extremely popular game, this time targeting the extdata savegame on the sd card. It works with both the digital and cartridge version of the game on app version 1.2.
@@ -36,11 +37,12 @@ Instructions:
 
 1. Place your 3DS sd card into your PC.
 
-2. In the Release folder, double click on the .bat that matches your 3DS's model type and region. 
+2. In the Release folder, double click on the .bat that matches your 3DS's region. 
 
 3. Your hax upload worked if there is no red text and it says "finished" at the end.
 
-4. Turn your 3ds on, boot mk7, and go to Mario Kart Channel -> Streetpass List -> Press A repeatedly (but slowly) to get past all the menu screens until the hax launches.
+4. Turn your 3ds on, boot mk7, and go to Mario Kart Channel -> Streetpass List -> Press A repeatedly (but slowly) to get past all the menu screens until the hax launches. You should see colors change on the bottom
+screen: Red -> Blue -> White. If you don't see those colors, and it just crashes (2-3 tries), then go to System Settings and change your language. Repeat language changes if you still can't get colored bottom screens after running exploit. If you do get those colors but it still crashes, just keep trying on that same language - you're almost there.
 
 5. If successful, you should arrive at a black and white screen titled "3DS ROP xPloit Injector". You now have a choice of further exploits to install: unsafe_mode or menuhax67, but that's the subject of another tutorial!
 Enjoy!
@@ -53,5 +55,5 @@ Q: This could mess up my save!<br>
 A: While I offer backup procedures in the instructions, I can make no guarantees this exploit can't mess up the overall savegame state somehow. I have no idea how the extdata save (or spotpass/streetpass) interacts with the normal savegame, for instance. This is why I need testers, and why I am calling this a BETA! Let's find out!<br>
 Q: Why can't I just run kartdlphax?<br>
 A: Well you certainly can, it's a great exploit. In fact, I'd recommend kartdlphax over Kartminer7, but you do need a 2nd hacked 3ds for it. If you don't have a 2nd hacked 3ds, I think kartminer7 could work well for you (after the beta phase, of course).<br>
-Q: Hi, I'm a famous youtube content creator and I'd like to make a video tutorial out of this exploit and not mention or attribute you in any way!<br>
-A: That's not a question, and no, you DO need to give me a shoutout for the work I put into writing these exploits while voluntarily refusing pay for it. It's just common courtesy.<br>
+Q: Hi, I'm a famous youtube content creator and I'm not sure whether to credit Zoogie when I make video tutorials, does he like to stay hidden?<br>
+A: I would like to be credited please, thanks. I'm not that secretive!<br>
