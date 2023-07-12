@@ -15,16 +15,14 @@ for i in range(0,0x2840-1,4):
 	spotpass[i:i+4]=struct.pack("<I",temp)
 
 redirect_offs=0x1bf5c
-linearmem_target=0x1574ed10 #1574ff10-ESP #1574f610-FRA #1574f810-GER #0ffffc58-15750190-ITL #1574f290-NED #1574f990-POR #1574f290-CYR   #0x1574d010-???
-linearmem_target=0x1574ed10 #44440600-ESP #44440f00-FRA #44440d00-GER #0ffffc58-15750190-ITL #44441280-NED #44440b80-POR #44441280-CYR
 pop_r4r7pc=0x100e60  #pop {r4, r5, r6, r7, pc}  # pc of initial pivot
 pivot_args=0x244e08  #ldm r0, {r0, r1} ; ldr r2, [r0] ; ldr r2, [r2, #0xc] ; blx r2   setup r0/r1 for below stack pivot
 pivot=0x12f6c0       #mov sp, r0 ; mov r0, r2 ; mov lr, r3 ; bx r1
 pivot_r3=0x1144e4
 
-PAYLOAD_ADDR=0x1579e600+0x800 #0x1579F500  1579c000
-PAYLOAD_ADDR=0x1579e080+0xf00 #1579EF80 ropkit to pivot to, finishing stage0. ropkit is embedded in the spotpass file  (weird charactor name inside boss/
-POP_R1PC=0x00109d6c           #1800-eng 1200-fra 0800-esp 1800-por
+PAYLOAD_ADDR=0x1579ed80		 	#1579d780-eng 1579dd80-fra 1579e780-esp 1579d780-por
+								#1579d780 ropkit to pivot to, finishing stage0. ropkit is embedded in the spotpass file  (weird charactor name inside boss/
+POP_R1PC=0x00109d6c           
 POP_R0PC=0x0011a698
 ROP_POPPC=0x001017b8
 GARBAGE=0x44444444
