@@ -51,7 +51,7 @@ CALLFUNC_NOSP MEMSET32_OTHER+4, 0x148d61a8-0x200, 0x210, 0x148d61a8, 0
 CALLFUNC_NOSP MEMSET32_OTHER+4, 0x148d61a8+0x10, 0x100, svcSleepThread, 0
 CALLFUNC_R0R1 svcSleepThread, 1000*1000000, 0
 
-CALLFUNC_NOSP FS_MountExtSavedata, UBL_, 0, 0x307, 0
+CALLFUNC_NOSP FS_MountExtSavedata, UBL_, 0, 0x308, 0
 
 @ Load the file into the buffer.
 
